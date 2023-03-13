@@ -1,7 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+
+// See https://aka.ms/new-console-template for more information
+string path = Directory.GetCurrentDirectory() + "\\nlog.config";
+
+// create instance of Logger
+//var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
+//logger.Info("Program started");
 string file = "ticket.txt";
 string choice;
+
         do
         {
             Console.WriteLine("1) Read data from file.");
@@ -9,6 +16,7 @@ string choice;
             Console.WriteLine("Enter any other key to exit.");
 
             choice = Console.ReadLine();
+            //logger.Info("User choise: {Choice}", choice);
 
             if (choice == "1")
             {
@@ -42,29 +50,31 @@ string choice;
                     //If response is not Y
                     if (resp != "Y") {break;}
                     //move to next question
+                    Ticket ticket = new Ticket();
                     Console.WriteLine("Enter ticket ID");
-                    string id = Console.ReadLine();
+                    ticket.ticketID = Console.ReadLine();
                     //ticket summary
                     Console.WriteLine("Please write the ticket summary: ");
-                    string sumry = Console.ReadLine();
+                    ticket.sumry = Console.ReadLine();
                     //ticket status
                     Console.WriteLine("Status of ticket (ongoing or resolved): ");
-                    string status = Console.ReadLine();
+                    ticket.status = Console.ReadLine();
                     //ticket priority
                     Console.WriteLine("Priority of ticket: ");
-                    string priority = Console.ReadLine();
+                    ticket.priority = Console.ReadLine();
                     //submitter of ticket
                     Console.WriteLine("Who is submitting the ticket? ");
-                    string sub = Console.ReadLine();
+                    ticket.sub = Console.ReadLine();
                     //Assigned the ticket
                     Console.WriteLine("Who assigned the ticket?");
-                    string assign = Console.ReadLine();
+                    ticket.assign = Console.ReadLine();
                     //Watching?
                     Console.WriteLine("Who is watching the ticket?");
-                    string watch = Console.ReadLine();
-                    sw.WriteLine("{0}|{1}|{2}|{3}|{4}|{5}|{6}", id, sumry, status, priority, sub, assign, watch);
+                    ticket.watch = Console.ReadLine();
+                 Console.WriteLine(ticket.display);                    
 
                 }
                 sw.Close();
             }
         } while(choice == "1" || choice == "2");
+        //logger.Info("Program ended");
