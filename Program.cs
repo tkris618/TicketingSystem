@@ -6,7 +6,7 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 // create instance of Logger
 //var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 //logger.Info("Program started");
-string file = "ticket.txt";
+string file = "ticket.csv";
 string choice;
 
         do
