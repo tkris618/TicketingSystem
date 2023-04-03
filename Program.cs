@@ -1,18 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
+using NLog;
 // See https://aka.ms/new-console-template for more information
 string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 
 // create instance of Logger
-//var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
-//logger.Info("Program started");
-string file = "ticket.csv";
+var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
+logger.Info("Program started");
+
+string scrubbedFile = FileScruber.ScrubTickets("ticket.csv");
+logger.Info(scrubbedFile);
+TicketFile ticketFile = new TicketFile(scrubbedFile);
+// string file = "ticket.csv";
 string choice;
 
         do
         {
+            Console.WriteLine("Ticket Data Storage");
             Console.WriteLine("1) Read data from file.");
             Console.WriteLine("2) Create file from data.");
+            Console.WriteLine("3) Search ticket from file.");
             Console.WriteLine("Enter any other key to exit.");
 
             choice = Console.ReadLine();
@@ -20,9 +26,9 @@ string choice;
 
             if (choice == "1")
             {
-                if (File.Exists(file))
+                if (File.Exists(scrubbedFile))
                 {
-                    StreamReader sr = new StreamReader(file);
+                    StreamReader sr = new StreamReader(scrubbedFile);
                     while (!sr.EndOfStream)
                     {
                         string line = sr.ReadLine();
@@ -40,9 +46,9 @@ string choice;
                     Console.WriteLine("File does not exist.");
                 }
             }
-            else if (choice == "2")
+            if (choice == "2")
             {
-                StreamWriter sw = new StreamWriter(file);
+                StreamWriter sw = new StreamWriter(scrubbedFile);
                 for (int i = 0; i < 7; i++)
                 {
                     Console.WriteLine("Enter a ticket (Y/N)?");
@@ -52,7 +58,7 @@ string choice;
                     //move to next question
                     Ticket ticket = new Ticket();
                     Console.WriteLine("Enter ticket ID");
-                    ticket.ticketID = Console.ReadLine();
+                    ticket.ticketID = UInt64.Parse(Console.ReadLine());
                     //ticket summary
                     Console.WriteLine("Please write the ticket summary: ");
                     ticket.sumry = Console.ReadLine();
@@ -76,5 +82,29 @@ string choice;
                 }
                 sw.Close();
             }
-        } while(choice == "1" || choice == "2");
+            if(choice == "3")
+            {
+                Console.WriteLine("Search for ticket? (Y/N)");
+                string resp = Console.ReadLine().ToUpper();
+
+                if(resp != "Y") {break;}
+
+                Console.WriteLine("Choose option to search from. (Status, priority, or submitter)");
+                string option = Console.ReadLine().ToLower();
+
+                if(option == "status")
+                {
+                    Console.WriteLine("Enter status of ticket: ");
+                    string ticketStatus = Console.ReadLine();
+
+                    var ticket = ticketFile.Tickets.Where(m => m.status.Contains(ticketStatus));
+                    Console.WriteLine($"There are {ticket.Count()} tickets with status {ticketStatus}.");
+
+                    foreach(Ticket g in ticket)
+                    {
+                        Console.WriteLine($"{g.ticketID}");
+                    }
+                }
+            }
+        } while(choice == "1" || choice == "2" || choice == "3");
         //logger.Info("Program ended");

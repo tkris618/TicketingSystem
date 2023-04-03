@@ -1,6 +1,6 @@
 public  class Ticket
 {
-    public string ticketID {get; set; }
+    public UInt64 ticketID {get; set; }
     public string sumry {get; set; }
     public string status {get; set;}
     public string priority {get; set;}
